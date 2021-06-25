@@ -4,8 +4,9 @@ wu = "dsafsadfdsa"
 docs = [f"These are two sentences, are you sure {wu}?"]
 lemmas = ["these", "be", "sentence", wu]
 
-lem = Lemmatizer(docs=docs)
+lemmatizer = Lemmatizer()
 
 def test_lemmatized_docs():
+    docs_lemmas = lemmatizer.lemmatize(docs=docs)
     for el in lemmas:
-        assert el in lem.docs_lemma[0] 
+        assert el in docs_lemmas[0] 
