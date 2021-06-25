@@ -6,7 +6,8 @@ lemmas = ["these", "be", "sentence", wu]
 
 lemmatizer = Lemmatizer()
 
+
 def test_lemmatized_docs():
     docs_lemmas = lemmatizer.lemmatize(docs=docs)
     for el in lemmas:
-        assert el in docs_lemmas[0] 
+        assert el in docs_lemmas[0]
