@@ -1,13 +1,10 @@
 from tfidf.tfidf import TfIdf
 
-docs = [
-    "this is a document", 
-    "Sea food is quite nice.", 
-    "Kittens are cute."
-]
+docs = ["this is a document", "Sea food is quite nice.", "Kittens are cute."]
 
 categorizer = TfIdf()
 categorizer.fit_transform(docs=docs)
+
 
 def test_tfidf():
     test_docs = ["food", "cute"]
