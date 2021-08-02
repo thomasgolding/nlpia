@@ -1,4 +1,5 @@
 from tfidf.tfidf import TfIdf
+from lsa.lsa import LSA
 
 
 class NotFittedError(Exception):
@@ -12,8 +13,10 @@ class DocSearch:
         self.similaritymeasure = similaritymeasure
         if self.method == "tfidf":
             self.vec = TfIdf()
+        elif self.method == "lsa":
+            self.vec = LSA()
         else:
-            raise ValueError("supported method values: tfidf")
+            raise ValueError("supported method values: tfidf, lsa")
 
     def fit(self, docs: list[str]):
         if not self.is_fitted:

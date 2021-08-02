@@ -37,3 +37,7 @@ class TfIdf:
         docs_lemmas = self.lemmatizer.lemmatize(docs=docs)
         x = self.vectorizer.transform(raw_documents=docs_lemmas)
         return x
+
+    def get_docs_column_matrix(self) -> csr_matrix:
+        return self.docs_matrix.transpose()
+
