@@ -1,5 +1,5 @@
-from tfidf.tfidf import TfIdf
 from lsa.lsa import LSA
+from tfidf.tfidf import TfIdf
 
 
 class NotFittedError(Exception):

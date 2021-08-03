@@ -1,3 +1,5 @@
+from typing import Optional
+
 import numpy as np
 from scipy.sparse.csr import csr_matrix
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -6,9 +8,10 @@ from nlpia.lemmatizer import Lemmatizer
 
 
 class TfIdf:
-    def __init__(self):
+    def __init__(self, vocabulary: Optional[list[str]] = None):
         self.lemmatizer = Lemmatizer()
-        self.vectorizer = TfidfVectorizer(smooth_idf=True)
+        self.vocabulary = vocabulary
+        self.vectorizer = TfidfVectorizer(smooth_idf=True, vocabulary=vocabulary)
 
     def get_most_similar(self, docs: list[str]) -> list[str]:
         if len(docs) == 0:
@@ -40,4 +43,3 @@ class TfIdf:
 
     def get_docs_column_matrix(self) -> csr_matrix:
         return self.docs_matrix.transpose()
-

@@ -1,31 +1,26 @@
 from lsa.lsa import LSA
 
 corpus = [
-    "NYC is the big apple",
-    "NYC is known as the big apple",
-    "I love NYC",
-    "I wore a hat to the big apple prty in NYC",
-    "Come to NYC, see the big apple",
-    "Manhattan is called the big apple",
-    "New york is a big city for a small cat.",
-    "The lion, a big cat, is the king of the jungle",
-    "I love my pet cat.",
-    "I love new york city (NYC)",
-    "Your dog chased my cat"
+    "cheese bread",
+    "wine beer",
+    " i enjoy cheese on bread",
+    "I drink beer on weekends.",
 ]
 
-vocabulary = ["cat", "dog", "apple", "lion", "nyc", "love"]
+vocabulary = ["cheese", "bread", "wine", "beer"]
+topics = [["cheese", "bread"], ["wine", "beer"]]
 
-
-ntopic=2
-lsa = LSA(ntopic=ntopic)
+ntopic = 2
+lsa = LSA(ntopic=ntopic, vocabulary=vocabulary)
 lsa.fit_transform(docs=corpus)
 
 
-def test_lsa():
-    ntopic=2
-    lsa = LSA(ntopic=ntopic)
-    lsa.fit_transform(docs=corpus)
-    assert lsa.docs_topic_vectors.shape[0] == ntopic 
+def test_lsa_number_of_topics():
+    assert lsa.docs_topic_vectors.shape[0] == ntopic
 
 
+def test_lsa_topic_words():
+    for topic_words, derived_topic in zip(topics, lsa.topic_words):
+        n_words = len(topic_words)
+        for w in derived_topic[0:n_words]:
+            assert w in topic_words
