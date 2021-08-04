@@ -24,3 +24,11 @@ def test_lsa_topic_words():
         n_words = len(topic_words)
         for w in derived_topic[0:n_words]:
             assert w in topic_words
+
+
+def test_get_similar():
+    new_lsa = LSA(ntopic=2)
+    new_lsa.fit_transform(docs=corpus)
+    for d in corpus:
+        sim = new_lsa.get_most_similar(docs=[d])
+        assert sim[0] == d

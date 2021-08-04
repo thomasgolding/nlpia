@@ -10,11 +10,15 @@ class LSA:
         self.ntopic = ntopic
         self.vocabulary = vocabulary
         self.tfidf = TfIdf(vocabulary=vocabulary)
+        self.fitted = False
 
     def fit_transform(self, docs: list[str]) -> None:
         self.tfidf.fit_transform(docs=docs)
+        self.docs = docs
         docs_m = self.tfidf.get_docs_column_matrix().toarray()
         u, s, vt = np.linalg.svd(docs_m)
+        nt = self.ntopic
+        self.topics = u[:, 0:nt]
 
         # prepare the document topicvectors
         sigma = np.zeros((self.ntopic, vt.shape[0]))
@@ -37,9 +41,11 @@ class LSA:
             for i_topic, ind in enumerate(self.topic_vocabulary_index)
         ]
 
+        self.fitted = True
+
         return
 
-    def print_topics(self, n_words: int = 3):
+    def print_topics(self, n_words: int = 3) -> None:
         for i_topic in range(self.ntopic):
             print(f"Topic {i_topic}")
             for i_word in range(n_words):
@@ -49,5 +55,31 @@ class LSA:
 
         return
 
-    def get_most_similar(self):
-        pass
+    def _transform(self, docs: list[str]) -> np.ndarray:
+
+        docs_tfidf = self.tfidf._transform(docs=docs).toarray().transpose()
+        docs_topic, _, _, _ = np.linalg.lstsq(a=self.topics, b=docs_tfidf, rcond=None)
+
+        # error_docs = self.topics.dot(docs)_topic-docs_tfidf
+        # reconstructed = self.topics.dot(docs_topic)
+        # diff = reconstructed - docs_tfidf
+        # error = np.sqrt((diff**2).sum(axis=0))
+        return docs_topic
+
+    def get_most_similar(self, docs: list[str]) -> list[str]:
+        if not self.fitted:
+            return []
+
+        docs_topic = self._transform(docs=docs)
+        m = self.docs_topic_vectors
+        r = docs_topic
+
+        mnorm = np.sqrt((m * m).sum(axis=0))
+        rnorm = np.sqrt((r * r).sum(axis=0))
+
+        prod = m.transpose().dot(r)
+        normprod = prod / np.atleast_2d(mnorm).transpose() / rnorm
+
+        rr = normprod.argmax(axis=0)
+        bestfit_docs = [self.docs[el] for el in rr]
+        return bestfit_docs
